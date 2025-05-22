@@ -1,6 +1,6 @@
 import { MODULE_ID } from "./consts.js";
 import { debugError, debugLog, getTranslation, isValidTarget } from "./module.js";
-import { SETTING_ID_DEBUG_LOGGING } from "./settings.js";
+import { SETTING_ID_DEBUG_LOGGING, SETTING_ID_EMPHASIZE_MULTIPLE_ONES } from "./settings.js";
 
 // Rewords the stress card by checking
 export async function rewordStressCard(state) {
@@ -10,15 +10,20 @@ export async function rewordStressCard(state) {
 		debugLog("Rewording stress card...");
 		if (game.settings.get(MODULE_ID, SETTING_ID_DEBUG_LOGGING))
 			console.log(state);
-		if (state.data.title === "Emergency Shunt") {
-			state.data.title = getTranslation("stress.emergency_shunt.title");
-			state.data.desc = getTranslation("stress.emergency_shunt.description");
-		} else if (state.data.title === "Destabilized Power Plant") {
-			state.data.title = getTranslation("stress.instability.title");
-			state.data.desc = getTranslation("stress.instability.description");
-		} else if (state.data.title.includes("Meltdown")) {
-			state.data.title = getTranslation("stress.meltdown.title");
-			state.data.desc = getTranslation("stress.meltdown.description");
+		const stressRoll = parseInt(state.data.result.total);
+		switch (stressRoll) {
+			case 6:
+			case 5:
+				state.data.title = getTranslation("stress.emergency_shunt.title");
+				state.data.desc = getTranslation("stress.emergency_shunt.description");
+				break;
+			case 4:
+			case 3:
+			case 2:
+			case 1:
+				state.data.title = getTranslation("stress.instability.title");
+				state.data.desc = getTranslation("stress.instability.description");
+				break;
 		}
 		debugLog(`-> ${state.data.title}`);
 		return true;
@@ -33,12 +38,18 @@ export async function rewordStressMultipleOnes(state) {
 		if (!isValidTarget(state.actor))
 			return true;
 		debugLog("Rewording multiple ones on stress roll...");
-		if (state.data.title === "Irreversible Meltdown") {
+		console.log(state);
+		if (state.data.result.roll.terms[0].results.filter(x => x.result === 1).length > 1) {
+			debugLog("Rolled multiple ones. Rewording.");
 			state.data.title = getTranslation("stress.meltdown.title");
 			state.data.desc = getTranslation("stress.meltdown.description");
+			if (game.settings.get(MODULE_ID, SETTING_ID_EMPHASIZE_MULTIPLE_ONES)) {
+				state.data.result.total = getTranslation("multiple_ones");
+				state.data.result.tt = state.data.result.tt.replace(`<li class="roll die d6 discarded min">1`, `<li class="roll die d6 min">1`)
+			}
 			debugLog(`-> ${state.data.title}`);
 		} else {
-			debugLog(`Actually we only rolled one 1. Oops. Skipping...`);
+			debugLog("Did not roll multiple ones. Skipping.");
 		}
 		return true;
 	} catch (error) {

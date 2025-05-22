@@ -1,6 +1,6 @@
 import { MODULE_ID } from "./consts.js";
 import { debugError, debugLog, getTranslation, isValidTarget } from "./module.js";
-import { SETTING_ID_DEBUG_LOGGING } from "./settings.js";
+import { SETTING_ID_DEBUG_LOGGING, SETTING_ID_EMPHASIZE_MULTIPLE_ONES } from "./settings.js";
 
 export async function rewordStructureCard(state) {
 	try {
@@ -44,9 +44,13 @@ export async function rewordStructureMultipleOnes(state) {
 			debugLog("Rolled multiple ones. Rewording.");
 			state.data.title = getTranslation("structure.target_destroyed.title");
 			state.data.desc = getTranslation("structure.target_destroyed.description");
+			if (game.settings.get(MODULE_ID, SETTING_ID_EMPHASIZE_MULTIPLE_ONES)) {
+				state.data.result.total = getTranslation("multiple_ones");
+				state.data.result.tt = state.data.result.tt.replace(`<li class="roll die d6 discarded min">1`, `<li class="roll die d6 min">1`)
+			}
 			debugLog(`-> ${state.data.title}`);
 		} else {
-			debugLog("Did not rolled multiple ones. Skipping.");
+			debugLog("Did not roll multiple ones. Skipping.");
 		}
 		return true;
 	} catch (error) {

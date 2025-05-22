@@ -1,9 +1,14 @@
 {
 	"ilysen-lancer-npc-rebake-structure": {
+		"multiple_ones": "Multiple Ones",
 		"settings": {
 			"debug_logging": {
 				"name": "Debug logging",
 				"hint": "Enables verbose debug logging. If you're reporting a bug, make sure you turn this on!"
+			},
+			"emphasize_multiple_ones": {
+				"name": "Emphasize multiple ones",
+				"hint": "Relevant structure/stress rolls will display \"Multiple Ones\" instead of just \"1\" for their results."
 			}
 		},
 		"structure": {
