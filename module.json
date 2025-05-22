@@ -1,7 +1,7 @@
 {
 	"id": "ilysen-lancer-npc-rebake-structure",
-	"title": "LANCER Rebake Structure",
-	"description": "Implements alternative structure rulesets for Lancer",
+	"title": "LANCER: NPCs Rebaked Structure Rules",
+	"description": "Implements NPC structure and stress rules from LANCER: NPCs Rebaked, by Kai Tave.",
 	"version": "0.1",
 	"compatibility": {
 		"minimum": 12,
@@ -9,7 +9,8 @@
 	},
 	"authors": [
 		{
-			"name": "Ceres et al."
+			"name": "Ceres et al.",
+			"url": "https://github.com/Ilysen"
 		}
 	],
 	"relationships": {
@@ -36,5 +37,5 @@
 			"path": "languages/en.json"
 		}
 	],
-	"license": "LICENSE"
+	"license": "LICENSE.md"
 }

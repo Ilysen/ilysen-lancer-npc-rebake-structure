@@ -1,13 +1,10 @@
 {
-	"Ilysen.Lancer-Rebake-Structure": {
-		"HullCheckTitles": {
-			"success": "Success",
-			"fail": "Failure",
-			"auto_fail": "Automatic Failure"
-		},
-		"HullCheckDescriptions": {
-			"success": "The NPC becomes <b>Impaired</b> until the end of their next turn.",
-			"fail": "The NPC becomes <b>Jammed</b> until the end of their next turn."
+	"ilysen-lancer-npc-rebake-structure": {
+		"settings": {
+			"debug_logging": {
+				"name": "Debug logging",
+				"hint": "Enables verbose debug logging. If you're reporting a bug, make sure you turn this on!"
+			}
 		},
 		"structure": {
 			"glancing_blow": {
