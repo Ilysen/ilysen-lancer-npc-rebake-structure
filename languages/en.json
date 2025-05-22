@@ -1,0 +1,45 @@
+{
+	"Ilysen.Lancer-Rebake-Structure": {
+		"HullCheckTitles": {
+			"success": "Success",
+			"fail": "Failure",
+			"auto_fail": "Automatic Failure"
+		},
+		"HullCheckDescriptions": {
+			"success": "The NPC becomes <b>Impaired</b> until the end of their next turn.",
+			"fail": "The NPC becomes <b>Jammed</b> until the end of their next turn."
+		},
+		"structure": {
+			"glancing_blow": {
+				"title": "Glancing Blow",
+				"description": "The damage is notable but the effects are minor, and the NPC is <b>Impaired</b> until the end of their next turn."
+			},
+			"system_failure": {
+				"title": "System Failure",
+				"description": "The hit was sufficient to disrupt the NPC's systems, forcing them to pass a <b>Hull</b> check or become <b>Jammed</b> until the end of their next turn. On a success, they become <b>Impaired</b> instead. If the NPC was already <b>Impaired,</b> they automatically fail this save."
+			},
+			"staggering_hit": {
+				"title": "Staggering Hit",
+				"description": "The NPC chooses; either they become <b>Stunned</b> until the end of their next turn, or they become <b>Impaired</b> and <b>Slowed</b> for the rest of the scene. If they choose the second option, it can't be chosen again for the rest of the scene."
+			},
+			"target_destroyed": {
+				"title": "Target Destroyed",
+				"description": "The NPC is destroyed."
+			}
+		},
+		"stress": {
+			"emergency_shunt": {
+				"title": "Emergency Shunt",
+				"description": "The NPC overheats but emergency safeties kick in, and they become is <b>Impaired</b> until the end of their next turn."
+			},
+			"instability": {
+				"title": "Instability",
+				"description": "The NPC becomes <b>Exposed</b> as their reactor becomes unstable, causing emergency vents to visibly open and weakening their armor."
+			},
+			"meltdown": {
+				"title": "Meltdown",
+				"description": "The NPC suffers a <b>reactor meltdown</b> at the end of their next turn."
+			}
+		}
+	}
+}

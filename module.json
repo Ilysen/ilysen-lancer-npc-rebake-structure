@@ -1,0 +1,40 @@
+{
+  "id": "ilysen-lancer-npc-rebake-structure",
+  "title": "LANCER Rebake Structure",
+  "description": "Implements alternative structure rulesets for Lancer",
+  "version": "0.1",
+  "compatibility": {
+    "minimum": 12,
+    "verified": 12
+  },
+  "authors": [
+    {
+      "name": "Ceres et al."
+    }
+  ],
+  "relationships": {
+    "systems": [
+      {
+        "id": "lancer",
+        "type": "system",
+        "compatibility": {
+          "minimum": "2.0.0"
+        }
+      }
+    ]
+  },
+  "system": [
+    "lancer"
+  ],
+  "esmodules": [
+    "scripts/module.js"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "languages/en.json"
+    }
+  ],
+  "license": "LICENSE"
+}
