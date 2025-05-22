@@ -108,10 +108,11 @@ export function debugLog(data, override = false) {
 // If debug logging is enabled, it also creates a visible notification for the error.
 export function debugError(state, data) {
 	if (!game.settings.get(MODULE_ID, SETTING_ID_DEBUG_LOGGING)) {
-		console.error(`${MODULE_ID} | ${data} (Flow state: ${state})`);
+		console.error(`${MODULE_ID} | ${data} (flow state linked below)`);
+		console.error(state);
 		return;
 	}
 	ui.notifications.error(`Caught an error during flow ${state.name}, step ${state.currentStep}: ${data} (see console for details)`);
-	console.log(`${MODULE_ID} | Flow state: ${state}`);
+	console.error(state);
 }
 //#endregion
