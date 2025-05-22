@@ -61,30 +61,32 @@ export async function insertHullCheckButton(state) {
 	return true;
 }
 
-/*async function performHullCheck(state) { // here be dragons
-	// todo: fix for PCs :awaaaaalol:
-	if (!state.actor.is_npc()) {
-		console.log("Actor is not NPC, returning");
+export async function npcZeroStructureCheck(state) {
+	if (!state.data)
+		throw new TypeError(`Structure roll flow data missing!`);
+
+	let actor = state.actor;
+	if (!actor.is_npc()) {
+		ui.notifications.warn("Only npcs and mechs can roll structure.");
+		return false;
+	}
+
+	if (state.data.remStruct > 0) {
+		// The mech is intact, we don't need to do anything in this step.
 		return true;
 	}
-	console.log(state.actor);
-	const autoFail = state.actor.parent.hasStatusEffect("impaired");
-	let success = false;
-	let rollFlow;
-	const statFlow = game.lancer.flows.get("StatRollFlow");
-	rollFlow = new statFlow(state.actor, { title: "STRUCTURE :: HULL ", path: "system.hull" });
-	success = await rollFlow.begin();
-	if (autoFail) {
-		rollFlow.result = 0;
-		success = false;
-	}
-	if (success) {
-		state.data.title = game.i18n.localize("Ilysen.Lancer-Rebake-Structure.HullCheckTitles.success");
-		state.data.desc = game.i18n.localize("Ilysen.Lancer-Rebake-Structure.HullCheckDescriptions.success");
-	} else {
-		state.data.title = game.i18n.localize(`Ilysen.Lancer-Rebake-Structure.HullCheckTitles.${autoFail ? "auto_" : ""}fail`);
-		state.data.desc = game.i18n.localize("Ilysen.Lancer-Rebake-Structure.HullCheckDescriptions.fail");
-	}
-	console.log(rollFlow.state);
-	return true;
-}*/
+
+	// You ded. Print the card and stop the flow.
+	const printCard = game.lancer.flowSteps.get("printStructureCard");
+	if (!printCard)
+		throw new TypeError(`printStructureCard flow step missing!`);
+	if (typeof printCard !== "function")
+		throw new TypeError(`printStructureCard flow step is not a function.`);
+	state.data.title = getTranslation("structure.target_destroyed.title");
+	state.data.desc = getTranslation("structure.target_destroyed.description");
+	state.data.result = undefined;
+
+	printCard(state);
+	// This flow is finished now, so we return false to stop the flow.
+	return false;
+}

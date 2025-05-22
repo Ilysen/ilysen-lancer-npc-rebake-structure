@@ -1,5 +1,5 @@
-import { rewordStructureCard, removeSystemTraumaButton, insertHullCheckButton, rewordStructureMultipleOnes } from "./structure.js";
-import { rewordStressCard, removeMeltdownButton, rewordStressMultipleOnes } from "./stress.js"
+import { rewordStructureCard, removeSystemTraumaButton, insertHullCheckButton, rewordStructureMultipleOnes, npcZeroStructureCheck } from "./structure.js";
+import { rewordStressCard, removeMeltdownButton, rewordStressMultipleOnes, npcZeroStressCheck } from "./stress.js"
 
 // Unlike some other alternate structure/stress rules out there, the rebakes utilize bespoke mechanics for NPCs, separate from PCs
 // As a result, we can't completely overwrite the existing flows; we need to account for both cases
@@ -22,6 +22,9 @@ Hooks.once("lancer.registerFlows", (flowSteps, flows) => {
     // ...and replace it with a regular hull check button instead
     flowSteps.set("rewordStructureMultipleOnes", rewordStructureMultipleOnes);
     structureFlow.insertStepAfter("checkStructureMultipleOnes", "rewordStructureMultipleOnes");
+
+    flowSteps.set("npcZeroStructureCheck", npcZeroStructureCheck);
+    structureFlow.insertStepBefore("noStructureRemaining", "npcZeroStructureCheck");
   }
 
   const stressFlow = flows.get("OverheatFlow");
@@ -37,6 +40,9 @@ Hooks.once("lancer.registerFlows", (flowSteps, flows) => {
     // ...and replace it with a regular hull check button instead
     flowSteps.set("rewordStressMultipleOnes", rewordStressMultipleOnes);
     stressFlow.insertStepAfter("checkOverheatMultipleOnes", "rewordStressMultipleOnes");
+
+    flowSteps.set("npcZeroStressCheck", npcZeroStressCheck);
+    stressFlow.insertStepBefore("noStressRemaining", "npcZeroStressCheck");
   }
 });
 
