@@ -8,5 +8,5 @@ This module is licensed under the [GNU General Public License v3](http://www.gnu
 
 ### Changelog
 
-#### TODO
-* Initial release.
+#### 24 May, 2025
+* Initial release. Supports LANCER system version 2.8.1 on FoundryVTT version 12.
