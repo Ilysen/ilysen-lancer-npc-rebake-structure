@@ -6,6 +6,8 @@ Original structure rules are still in place for PCs, and for NPCs that have the 
 
 This module is licensed under the [GNU General Public License v3](http://www.gnu.org/licenses/agpl.html), which can be found in full in [LICENSE.md](LICENSE.md). The rules this module implements are not, though, and belong to the source work! They're implemented here with [explicit permission](https://discord.com/channels/426286410496999425/1334655875679260692/1375210458893652061).
 
+![firefox_GpZE8RCMxa](https://github.com/user-attachments/assets/b373f353-4016-4d38-bedb-ad7a5681388b)
+
 ### Changelog
 
 #### 24 May, 2025
