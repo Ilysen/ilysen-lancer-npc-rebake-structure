@@ -1,5 +1,5 @@
 import { MODULE_ID } from "./consts.js";
-import { SETTING_ID_DEBUG_LOGGING, bindSettings } from "./settings.js";
+import { SETTING_ID_DEBUG_LOGGING, SETTING_ID_LEGENDARY_WORKAROUND, bindSettings } from "./settings.js";
 import { npcZeroStressCheck, removeMeltdownButton, rewordStressCard, rewordStressMultipleOnes } from "./stress.js";
 import { insertHullCheckButton, npcZeroStructureCheck, removeSystemTraumaButton, rewordStructureCard, rewordStructureMultipleOnes } from "./structure.js";
 
@@ -43,6 +43,10 @@ Hooks.once("lancer.registerFlows", (flowSteps, flows) => {
 		// we need to use a bespoke thing here 
 		flowSteps.set(`${MODULE_ID}:npcZeroStructureCheck`, npcZeroStructureCheck);
 		structureFlow.insertStepBefore("noStructureRemaining", `${MODULE_ID}:npcZeroStructureCheck`);
+
+		// ...and we need to put this here too
+		flowSteps.set(`${MODULE_ID}:hackyLegendaryFixStructure`, hackyLegendaryFix);
+		structureFlow.insertStepBefore("preStructureRollChecks", `${MODULE_ID}:hackyLegendaryFixStructure`);
 	}
 
 	const stressFlow = flows.get("OverheatFlow");
@@ -61,8 +65,32 @@ Hooks.once("lancer.registerFlows", (flowSteps, flows) => {
 
 		flowSteps.set(`${MODULE_ID}:npcZeroStressCheck`, npcZeroStressCheck);
 		stressFlow.insertStepBefore("noStressRemaining", `${MODULE_ID}:npcZeroStressCheck`);
+
+		flowSteps.set(`${MODULE_ID}:hackyLegendaryFixStress`, hackyLegendaryFix);
+		stressFlow.insertStepBefore("preOverheatRollChecks", `${MODULE_ID}:hackyLegendaryFixStress`);
 	}
 	debugLog("Flows registered.", true);
+});
+
+
+// This whole section is to set up variables for the Legendary trait workaround, which sucks. :P
+
+let pack;
+let docs;
+let legendary;
+Hooks.once("ready", async function () {
+	try {
+		debugLog("Searching for the vanilla Legendary trait to facilitate workarounds...");
+		pack = game.packs.get("world.npc-items");
+		docs = await pack.getDocuments();
+		legendary = docs.find(x => x.system.lid == "npcf_legendary_ultra");
+		debugLog("-> Feature located successfully.");
+	} catch (error) {
+		console.error(error)
+		if (game.settings.get(MODULE_ID, SETTING_ID_LEGENDARY_WORKAROUND) > 0) {
+			ui.notifications.error("Rebaked structure rules failed to locate the Legendary trait from the core book! This will cause things to break! Did you load the core NPCs?")
+		}
+	}
 });
 //#endregion
 
@@ -85,11 +113,11 @@ export function getTranslation(key) {
 // This excludes non-NPC actors as well as Ultras
 export function isValidTarget(actor) {
 	if (!actor.is_npc()) {
-		debugLog("Target is not an NPC -- ignoring this step")
+		debugLog("Target is not an NPC - using vanilla rules")
 		return false;
 	}
 	if (actor.items.find(x => x.type === "npc_template" && x.name.toLowerCase().includes("ultra"))) {
-		debugLog("NPC is an Ultra -- ignoring this step")
+		debugLog("NPC is an Ultra - using vanilla rules")
 		return false;
 	}
 	return true;
@@ -114,5 +142,51 @@ export function debugError(state, data) {
 	}
 	ui.notifications.error(`Caught an error during flow ${state.name}, step ${state.currentStep}: ${data} (see console for details)`);
 	console.error(state);
+}
+//#endregion
+
+//#region Hacky fixes
+
+/////////////////////////////////////
+//                                 //
+//  THIS IS NOT A PLACE OF HONOR   //
+//                                 //
+/////////////////////////////////////
+
+// Problem: The lancer system will only automate Legendary if it detects the core book version. The ID is hardcoded.
+// Solution: This horrible thing. Essentially, we remove the rebake version of Legendary and drop in the core book version.
+// Optionally (enabled by default), change the new vanilla copy's name and description to mirror the rebaked one,
+// so that it looks the same to things like the Scan macro but under the hood it's the vanilla version.
+// If the base system's code ever gets touched up, self-reminder to make this something that isn't Terrible Awful Bad
+async function hackyLegendaryFix(state) {
+	const workaroundSetting = game.settings.get(MODULE_ID, SETTING_ID_LEGENDARY_WORKAROUND);
+	if (!workaroundSetting || !state.actor?.is_npc())
+		return true;
+	debugLog(`Attempting to implement hacky Legendary fix for ${state.actor.name}...`);
+	let rebakeLegendary = state.actor?.items.find(x => x.system.lid == "npc-rebake_npcf_legendary_ultra");
+	if (!rebakeLegendary) {
+		debugLog("-> NPC lacks the rebake Legendary feature. Skipping.")
+		return true;
+	}
+	if (state.actor.items.find(x => x.system.lid == "npcf_legendary_ultra")) {
+		debugLog("-> NPC already has the base Legendary feature. Skipping.")
+		return true;
+	}
+	debugLog("-> Vanilla Legendary is not present but is required. Adding it now...")
+	let [newFeature, unused] = await state.actor.quickOwn(legendary);
+	console.log(newFeature);
+	if (workaroundSetting == 2) {
+		debugLog("-> Added. Masking name...")
+		await newFeature.update({
+			"name": rebakeLegendary.name,
+			"system.effect": rebakeLegendary.system.effect,
+			"system.origin.name": rebakeLegendary.system.origin.name
+		})
+	}
+	debugLog("-> Vanilla Legendary has been added. Now removing the rebake one...")
+	console.log(rebakeLegendary);
+	await state.actor.removeClassFeatures(rebakeLegendary);
+	await state.actor.deleteEmbeddedDocuments("Item", [rebakeLegendary.id]);
+	debugLog("-> Rebake Legendary has been removed. We are good to go!")
 }
 //#endregion

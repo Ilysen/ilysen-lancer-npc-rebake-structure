@@ -9,6 +9,15 @@
 			"emphasize_multiple_ones": {
 				"name": "Emphasize multiple ones",
 				"hint": "Relevant structure/stress rolls will display \"Multiple Ones\" instead of just \"1\" for their results."
+			},
+			"legendary_workaround": {
+				"name": "Workaround for the Legendary trait",
+				"hint": "Before making a structure/stress roll on an Ultra, automatically removes the rebaked Legendary trait and adds the core book version in its place. This circumvents a system limitation that prevents it from being automated. Also optionally makes its name and description identical afterwards, to avoid it standing out on things like the Scan macro.",
+				"levels": {
+					"disable": "Disabled",
+					"enable": "Enabled",
+					"enableAndMask": "Enabled, and change its name"
+				}
 			}
 		},
 		"structure": {

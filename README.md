@@ -10,5 +10,8 @@ This module is licensed under the [GNU General Public License v3](http://www.gnu
 
 ### Changelog
 
+#### 11 November, 2025 (v0.1.1)
+* Adds an optional workaround, enabled by default, that fixes the Legendary trait not being automated by silently adding in the core book version in place of the rebaked one.
+
 #### 24 May, 2025
 * Initial release. Supports LANCER system version 2.8.1 on FoundryVTT version 12.

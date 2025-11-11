@@ -1,8 +1,9 @@
 import { MODULE_ID } from "./consts.js";
-import { debugError, debugLog } from "./module.js";
+import { debugError, debugLog, getTranslation } from "./module.js";
 
 export const SETTING_ID_DEBUG_LOGGING = "debug_logging";
 export const SETTING_ID_EMPHASIZE_MULTIPLE_ONES = "emphasize_multiple_ones";
+export const SETTING_ID_LEGENDARY_WORKAROUND = "legendary_workaround";
 
 // Module config setup function.
 export const bindSettings = () => {
@@ -24,6 +25,20 @@ export const bindSettings = () => {
 				config: true,
 				type: Boolean,
 				default: true
+			});
+			const workaroundLevels = [
+				getTranslation("settings.legendary_workaround.levels.disable"),
+				getTranslation("settings.legendary_workaround.levels.enable"),
+				getTranslation("settings.legendary_workaround.levels.enableAndMask")
+			];
+			game.settings.register(MODULE_ID, SETTING_ID_LEGENDARY_WORKAROUND, {
+				name: `${MODULE_ID}.settings.legendary_workaround.name`,
+				hint: `${MODULE_ID}.settings.legendary_workaround.hint`,
+				scope: "world",
+				config: true,
+				type: Number,
+				choices: workaroundLevels,
+				default: 2
 			});
 			debugLog("Settings have been registered. We should be all set!", true);
 		} catch (error) {
