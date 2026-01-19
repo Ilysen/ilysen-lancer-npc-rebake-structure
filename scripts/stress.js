@@ -37,13 +37,20 @@ export async function rewordStressMultipleOnes(state) {
 		if (!isValidTarget(state.actor))
 			return true;
 		debugLog("Rewording multiple ones on stress roll...");
-		if (state.data.result.roll.terms[0].results.filter(x => x.result === 1).length > 1) {
+		let rollToUse = state.data.result.roll;
+		if (rollToUse.terms[0].rolls?.length > 1) {
+			debugLog("We've rolled multiple times - probably Legendary. Picking the one that isn't discarded.")
+			const chosenIndex = rollToUse.terms[0].results.findIndex(x => !x.discarded);
+			rollToUse = rollToUse.terms[0].rolls[chosenIndex];
+		}
+		if (rollToUse.terms[0].results.filter(x => x.result === 1).length > 1) {
 			debugLog("Rolled multiple ones. Rewording.");
 			state.data.title = getTranslation("stress.meltdown.title");
 			state.data.desc = getTranslation("stress.meltdown.description");
 			if (game.settings.get(MODULE_ID, SETTING_ID_EMPHASIZE_MULTIPLE_ONES)) {
 				state.data.result.total = getTranslation("multiple_ones");
-				state.data.result.tt = state.data.result.tt.replace(`<li class="roll die d6 discarded min">1`, `<li class="roll die d6 min">1`)
+				state.data.result.tt = state.data.result.tt.replace(`<li class="roll die d6 discarded min">1`, `<li class="roll die d6 min">1`);
+				state.data.result.tt = state.data.result.tt.replace(`<li class="roll die d6 discarded max">1`, `<li class="roll die d6 max">1`);
 			}
 			debugLog(`-> ${state.data.title}`);
 		} else {

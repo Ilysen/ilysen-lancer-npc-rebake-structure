@@ -10,7 +10,7 @@ This module is licensed under the [GNU General Public License v3](http://www.gnu
 
 ### Changelog
 
-#### 18 January, 2026 (v0.1.2)
+#### 18 January, 2026 (v0.1.2.1)
 * (Hopefully) fixes an issue where NPCs with the Legendary trait would erroneously report rolling multiple 1s if they rolled a 1 on both their first roll and its reroll. It should now correctly only look for multiple 1s within each specific roll.
 
 #### 11 November, 2025 (v0.1.1)
