@@ -1,5 +1,5 @@
 import { MODULE_ID } from "./consts.js";
-import { debugError, debugLog, getTranslation, isValidTarget } from "./module.js";
+import { debugError, debugLog, getTranslation, isValidTarget, rollHasMultipleOnes } from "./module.js";
 import { SETTING_ID_DEBUG_LOGGING, SETTING_ID_DIRECT_HIT_WORKAROUND, SETTING_ID_EMPHASIZE_MULTIPLE_ONES } from "./settings.js";
 
 export async function rewordStructureCard(state) {
@@ -23,16 +23,17 @@ export async function rewordStructureCard(state) {
 				state.data.desc = getTranslation("structure.system_failure.description");
 				break;
 			case 1:
-				state.data.title = getTranslation("structure.staggering_hit.title");
-				state.data.desc = getTranslation("structure.staggering_hit.description");
-				if (state.data.remStruct > 0 && state.actor.system.structure.value === 0 && game.settings.get(MODULE_ID, SETTING_ID_DIRECT_HIT_WORKAROUND)) {
+				if (game.settings.get(MODULE_ID, SETTING_ID_DIRECT_HIT_WORKAROUND) && state.data.remStruct > 0 && state.actor.system.structure.value === 0 && !rollHasMultipleOnes(state.data.result.roll)) {
 					debugLog("Detected a fatal Direct Hit. Adjusting with workaround.")
+					state.data.val = state.data.remStruct;
 					await state.actor.update({
 						"system.structure.value": state.data.remStruct,
 						"system.hp.value": state.actor.system.hp.value + state.actor.system.hp.max // correct for changes done in the base system
 					});
 					debugLog(`Adjustment complete. Actor should have ${state.data.remStruct} structure and ${state.actor.system.hp.value} HP.`);
 				}
+				state.data.title = getTranslation("structure.staggering_hit.title");
+				state.data.desc = getTranslation("structure.staggering_hit.description");
 				break;
 		}
 		debugLog(`-> ${state.data.title}`);
@@ -48,13 +49,7 @@ export async function rewordStructureMultipleOnes(state) {
 		if (!isValidTarget(state.actor))
 			return true;
 		debugLog("Checking multiple ones on structure roll…");
-		let rollToUse = state.data.result.roll;
-		if (rollToUse.terms[0].rolls?.length > 1) {
-			debugLog("We've rolled multiple times - probably Legendary. Picking the one that isn't discarded.")
-			const chosenIndex = rollToUse.terms[0].results.findIndex(x => !x.discarded);
-			rollToUse = rollToUse.terms[0].rolls[chosenIndex];
-		}
-		if (rollToUse.terms[0].results.filter(x => x.result === 1).length > 1) {
+		if (rollHasMultipleOnes(state.data.result.roll)) {
 			debugLog("Rolled multiple ones. Rewording.");
 			state.data.title = getTranslation("structure.target_destroyed.title");
 			state.data.desc = getTranslation("structure.target_destroyed.description");

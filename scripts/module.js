@@ -123,6 +123,20 @@ export function isValidTarget(actor) {
 	return true;
 }
 
+// Determines if the provided roll contains multiple ones.
+// Accounts for Legendary and the like. We use this as a function so we don't have to repeat it everywhere.
+export function rollHasMultipleOnes(roll) {
+	debugLog("Checking roll for multiple ones…")
+	if (roll.terms[0].rolls?.length > 1) {
+		debugLog("-> We've rolled multiple times - probably Legendary. Picking the one that isn't discarded.")
+		const chosenIndex = roll.terms[0].results.findIndex(x => !x.discarded);
+		roll = roll.terms[0].rolls[chosenIndex];
+	}
+	let totalOnes = roll.terms[0].results.filter(x => x.result === 1).length;
+	debugLog(`Total rolled ones: ${totalOnes}`);
+	return totalOnes > 1;
+}
+
 // Logs to the console with the provided data prefixed by the module ID.
 // Only functions when debug logging is enabled unless `override` is true.
 export function debugLog(data, override = false) {

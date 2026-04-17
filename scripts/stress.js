@@ -1,5 +1,5 @@
 import { MODULE_ID } from "./consts.js";
-import { debugError, debugLog, getTranslation, isValidTarget } from "./module.js";
+import { debugError, debugLog, getTranslation, isValidTarget, rollHasMultipleOnes } from "./module.js";
 import { SETTING_ID_DEBUG_LOGGING, SETTING_ID_EMPHASIZE_MULTIPLE_ONES } from "./settings.js";
 
 export async function rewordStressCard(state) {
@@ -37,13 +37,7 @@ export async function rewordStressMultipleOnes(state) {
 		if (!isValidTarget(state.actor))
 			return true;
 		debugLog("Rewording multiple ones on stress roll…");
-		let rollToUse = state.data.result.roll;
-		if (rollToUse.terms[0].rolls?.length > 1) {
-			debugLog("We've rolled multiple times - probably Legendary. Picking the one that isn't discarded.")
-			const chosenIndex = rollToUse.terms[0].results.findIndex(x => !x.discarded);
-			rollToUse = rollToUse.terms[0].rolls[chosenIndex];
-		}
-		if (rollToUse.terms[0].results.filter(x => x.result === 1).length > 1) {
+		if (rollHasMultipleOnes(state.data.result.roll)) {
 			debugLog("Rolled multiple ones. Rewording.");
 			state.data.title = getTranslation("stress.meltdown.title");
 			state.data.desc = getTranslation("stress.meltdown.description");
