@@ -1,12 +1,12 @@
 import { MODULE_ID } from "./consts.js";
 import { debugError, debugLog, getTranslation, isValidTarget } from "./module.js";
-import { SETTING_ID_DEBUG_LOGGING, SETTING_ID_EMPHASIZE_MULTIPLE_ONES } from "./settings.js";
+import { SETTING_ID_DEBUG_LOGGING, SETTING_ID_DIRECT_HIT_WORKAROUND, SETTING_ID_EMPHASIZE_MULTIPLE_ONES } from "./settings.js";
 
 export async function rewordStructureCard(state) {
 	try {
 		if (!isValidTarget(state.actor))
 			return true;
-		debugLog("Rewording structure card...");
+		debugLog("Rewording structure card…");
 		if (game.settings.get(MODULE_ID, SETTING_ID_DEBUG_LOGGING))
 			console.log(state);
 		const structRoll = parseInt(state.data.result.total);
@@ -25,6 +25,14 @@ export async function rewordStructureCard(state) {
 			case 1:
 				state.data.title = getTranslation("structure.staggering_hit.title");
 				state.data.desc = getTranslation("structure.staggering_hit.description");
+				if (state.data.remStruct > 0 && state.actor.system.structure.value === 0 && game.settings.get(MODULE_ID, SETTING_ID_DIRECT_HIT_WORKAROUND)) {
+					debugLog("Detected a fatal Direct Hit. Adjusting with workaround.")
+					await state.actor.update({
+						"system.structure.value": state.data.remStruct,
+						"system.hp.value": state.actor.system.hp.value + state.actor.system.hp.max // correct for changes done in the base system
+					});
+					debugLog(`Adjustment complete. Actor should have ${state.data.remStruct} structure and ${state.actor.system.hp.value} HP.`);
+				}
 				break;
 		}
 		debugLog(`-> ${state.data.title}`);
@@ -39,7 +47,7 @@ export async function rewordStructureMultipleOnes(state) {
 	try {
 		if (!isValidTarget(state.actor))
 			return true;
-		debugLog("Checking multiple ones on structure roll...");
+		debugLog("Checking multiple ones on structure roll…");
 		let rollToUse = state.data.result.roll;
 		if (rollToUse.terms[0].rolls?.length > 1) {
 			debugLog("We've rolled multiple times - probably Legendary. Picking the one that isn't discarded.")

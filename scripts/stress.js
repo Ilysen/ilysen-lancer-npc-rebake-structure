@@ -6,7 +6,7 @@ export async function rewordStressCard(state) {
 	try {
 		if (!isValidTarget(state.actor))
 			return true;
-		debugLog("Rewording stress card...");
+		debugLog("Rewording stress card…");
 		if (game.settings.get(MODULE_ID, SETTING_ID_DEBUG_LOGGING))
 			console.log(state);
 		const stressRoll = parseInt(state.data.result?.total) || state.data.val;
@@ -36,7 +36,7 @@ export async function rewordStressMultipleOnes(state) {
 	try {
 		if (!isValidTarget(state.actor))
 			return true;
-		debugLog("Rewording multiple ones on stress roll...");
+		debugLog("Rewording multiple ones on stress roll…");
 		let rollToUse = state.data.result.roll;
 		if (rollToUse.terms[0].rolls?.length > 1) {
 			debugLog("We've rolled multiple times - probably Legendary. Picking the one that isn't discarded.")

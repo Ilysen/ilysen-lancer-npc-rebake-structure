@@ -18,6 +18,10 @@
 					"enable": "Enabled",
 					"enableAndMask": "Enabled, and change its name"
 				}
+			},
+			"direct_hit_workaround": {
+				"name": "Workaround for Direct Hit",
+				"hint": "To accommodate the vanilla structure rules, the LANCER system is hardcoded to destroy an NPC that rolls a 1 on their structure check when they would be left at 1 structure remaining. This setting enables a workaround that should prevent that. You shouldn't need to turn this off in regular play, but it's available in case you run into any issues."
 			}
 		},
 		"structure": {

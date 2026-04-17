@@ -80,7 +80,7 @@ let docs;
 let legendary;
 Hooks.once("ready", async function () {
 	try {
-		debugLog("Searching for the vanilla Legendary trait to facilitate workarounds...");
+		debugLog("Searching for the vanilla Legendary trait to facilitate workarounds…");
 		pack = game.packs.get("world.npc-items");
 		docs = await pack.getDocuments();
 		legendary = docs.find(x => x.system.lid == "npcf_legendary_ultra");
@@ -172,18 +172,18 @@ async function hackyLegendaryFix(state) {
 		debugLog("-> NPC already has the base Legendary feature. Skipping.")
 		return true;
 	}
-	debugLog("-> Vanilla Legendary is not present but is required. Adding it now...")
+	debugLog("-> Vanilla Legendary is not present but is required. Adding it now…")
 	let [newFeature, unused] = await state.actor.quickOwn(legendary);
 	console.log(newFeature);
 	if (workaroundSetting == 2) {
-		debugLog("-> Added. Masking name...")
+		debugLog("-> Added. Masking name…")
 		await newFeature.update({
 			"name": rebakeLegendary.name,
 			"system.effect": rebakeLegendary.system.effect,
 			"system.origin.name": rebakeLegendary.system.origin.name
 		})
 	}
-	debugLog("-> Vanilla Legendary has been added. Now removing the rebake one...")
+	debugLog("-> Vanilla Legendary has been added. Now removing the rebake one…")
 	console.log(rebakeLegendary);
 	await state.actor.removeClassFeatures(rebakeLegendary);
 	await state.actor.deleteEmbeddedDocuments("Item", [rebakeLegendary.id]);

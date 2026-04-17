@@ -10,6 +10,10 @@ This module is licensed under the [GNU General Public License v3](http://www.gnu
 
 ### Changelog
 
+#### 17 April, 2026 (v0.1.2.2)
+* Implements a workaround for the default LANCER system having a hardcoded functionality to destroy an NPC when there is a 1 on the structure check die and they would be left at 1 structure.
+* Various debug messages now use an ellipsis character (…) instead of three dots (...), which should matter to basically nobody but me but does make me more pleased about how it reads.
+
 #### 18 January, 2026 (v0.1.2.1)
 * (Hopefully) fixes an issue where NPCs with the Legendary trait would erroneously report rolling multiple 1s if they rolled a 1 on both their first roll and its reroll. It should now correctly only look for multiple 1s within each specific roll.
 
