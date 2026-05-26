@@ -1,6 +1,6 @@
-# LANCER: NPCs Rebaked Structure Rules
+# Lancer: NPCs Rebaked Structure Rules
 
-This is a module for [Lancer](https://massif-press.itch.io/corebook-pdf-free) on [FoundryVTT](https://foundryvtt.com/) that implements alternate structure/stress rules from Lancer: NPCs Rebaked by Kai Tave. These rules are currently in playtesting, and you can find the drafts on [this thread in Pilot NET](https://discord.com/channels/426286410496999425/1334655875679260692). 
+This is a module for [Lancer](https://massif-press.itch.io/corebook-pdf-free) on [FoundryVTT](https://foundryvtt.com/) that implements alternate structure/stress rules from [Lancer: NPCs Rebaked](https://kaitave.itch.io/lancer-npcs-rebaked) by Kai Tave.
 
 Original structure rules are still in place for PCs, and for NPCs that have the Ultra template!
 
@@ -9,6 +9,10 @@ This module is licensed under the [GNU General Public License v3](http://www.gnu
 ![firefox_GpZE8RCMxa](https://github.com/user-attachments/assets/b373f353-4016-4d38-bedb-ad7a5681388b)
 
 ### Changelog
+
+#### 26 May, 2026 (v0.1.2.3)
+* Marked as compatible with Foundry v13. No code changes were required.
+* Renamed the module from `LANCER: NPCs Rebaked (...)` to `Lancer: NPCs Rebaked (...)`, since the final supplement (as opposed to the playtesting versions this module was originally based on) uses that naming scheme.
 
 #### 17 April, 2026 (v0.1.2.2)
 * Implements a workaround for the default LANCER system having a hardcoded functionality to destroy an NPC when there is a 1 on the structure check die and they would be left at 1 structure.
