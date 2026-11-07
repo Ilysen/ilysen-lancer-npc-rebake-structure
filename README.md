@@ -14,10 +14,8 @@ Default configuration should work out of the box unless you need to tune it for 
 * **Emphasize multiple ones:** Structure/stress rolls will display "Multiple Ones" instead of just "1" for their results. Defaults to on.
 * **Workaround for the Legendary trait:** Allows the Legendary trait of rebaked Ultras to work correctly.
 	* *Requires the core NPCs to be loaded, and will throw an error if they aren't.*
-	* By default, it will replace the trait as well as edit its name and description to match the rebake's formatting. The setting caan be made to not do this, or disabled entirely. 
-	* -# *Technical details:* Lancer detects the Legendary trait by looking for the core book's Legendary trait via LCP ID. Since the rebake LCP obviously has a different ID, it doesn't work. The workaround here is to silently replace the rebake's version with core book's version before the roll is made.
+	* By default, it will replace the trait as well as edit its name and description to match the rebake's formatting. It can be configured not to do this, or disabled entirely. 
 * **Workaround for Direct Hit:** Prevents NPCs from being destroyed on a Staggering Hit. Defaults to on.
-	* -# *Technical details:* Lancer for Foundry is hardcoded to wreck an NPC that rolls a 1 on its structure check. This workaround undoes this effect right after it happens.
 * **Debug logging:** Outputs much more info to the browser's log. *Turn this on if you're reporting a bug!*
 
 ## Compatibility
