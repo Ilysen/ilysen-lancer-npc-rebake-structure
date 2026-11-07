@@ -11,14 +11,6 @@ export const bindSettings = () => {
 	Hooks.on("init", () => {
 		try {
 			debugLog("Registering settings…", true);
-			game.settings.register(MODULE_ID, SETTING_ID_DEBUG_LOGGING, {
-				name: `${MODULE_ID}.settings.debug_logging.name`,
-				hint: `${MODULE_ID}.settings.debug_logging.hint`,
-				scope: "client",
-				config: true,
-				type: Boolean,
-				default: false
-			});
 			game.settings.register(MODULE_ID, SETTING_ID_EMPHASIZE_MULTIPLE_ONES, {
 				name: `${MODULE_ID}.settings.emphasize_multiple_ones.name`,
 				hint: `${MODULE_ID}.settings.emphasize_multiple_ones.hint`,
@@ -48,6 +40,14 @@ export const bindSettings = () => {
 				config: true,
 				type: Boolean,
 				default: true
+			});
+			game.settings.register(MODULE_ID, SETTING_ID_DEBUG_LOGGING, {
+				name: `${MODULE_ID}.settings.debug_logging.name`,
+				hint: `${MODULE_ID}.settings.debug_logging.hint`,
+				scope: "client",
+				config: true,
+				type: Boolean,
+				default: false
 			});
 			debugLog("Settings have been registered. We should be all set!", true);
 		} catch (error) {

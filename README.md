@@ -9,6 +9,21 @@ This module is licensed under the [GNU General Public License v3](http://www.gnu
 
 ![firefox_GpZE8RCMxa](https://github.com/user-attachments/assets/b373f353-4016-4d38-bedb-ad7a5681388b)
 
+## Usage notes
+Default configuration should work out of the box unless you need to tune it for your specific module setup. Settings can be tweaked as follows:
+* **Emphasize multiple ones:** Structure/stress rolls will display "Multiple Ones" instead of just "1" for their results. Defaults to on.
+* **Workaround for the Legendary trait:** Allows the Legendary trait of rebaked Ultras to work correctly.
+	* *Requires the core NPCs to be loaded, and will throw an error if they aren't.*
+	* By default, it will replace the trait as well as edit its name and description to match the rebake's formatting. The setting caan be made to not do this, or disabled entirely. 
+	* -# *Technical details:* Lancer detects the Legendary trait by looking for the core book's Legendary trait via LCP ID. Since the rebake LCP obviously has a different ID, it doesn't work. The workaround here is to silently replace the rebake's version with core book's version before the roll is made.
+* **Workaround for Direct Hit:** Prevents NPCs from being destroyed on a Staggering Hit. Defaults to on.
+	* -# *Technical details:* Lancer for Foundry is hardcoded to wreck an NPC that rolls a 1 on its structure check. This workaround undoes this effect right after it happens.
+* **Debug logging:** Outputs much more info to the browser's log. *Turn this on if you're reporting a bug!*
+
+## Compatibility
+* [LANCER Alternative Structure](https://foundryvtt.com/packages/lancer-alt-structure): ***Compatible.*** Player mechs and Ultras will use the alternative rules, while other NPCs will use the rebake rules.
+* [Lancer QoL](https://foundryvtt.com/packages/csm-lancer-qol): ***Mostly compatible, with caveats.*** This module doesn't play nicely with Lancer QoL's wreck automation and you may run into issues if you leave it on. Everything else works fine.
+
 ## Attributions
 TODO
 
