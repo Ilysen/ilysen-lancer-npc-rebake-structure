@@ -55,6 +55,9 @@
 				"title": "Meltdown",
 				"description": "The NPC suffers a <b>reactor meltdown</b> at the end of their next turn."
 			}
+		},
+		"errors": {
+			"no_crb_legendary_loaded": "Rebaked structure rules failed to locate the Legendary trait from the core book! Did you load the core NPCs?"
 		}
 	}
 }

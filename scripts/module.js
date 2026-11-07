@@ -18,7 +18,7 @@ bindSettings();
 // We do this by adding "postfix" flow steps throughout the regular ones that overwrite, add, or remove things depending on context
 
 Hooks.once("lancer.registerFlows", (flowSteps, flows) => {
-	debugLog(`Registering flows...`, true);
+	debugLog(`Registering flows…`, true);
 	const structureFlow = flows.get("StructureFlow");
 	if (structureFlow) {
 		debugLog("-> Registering structure hooks", true);
@@ -26,11 +26,11 @@ Hooks.once("lancer.registerFlows", (flowSteps, flows) => {
 		flowSteps.set(`${MODULE_ID}:rewordStructureCard`, rewordStructureCard);
 		structureFlow.insertStepAfter("rollStructureTable", `${MODULE_ID}:rewordStructureCard`);
 
-		// Remove the bespoke button that appears for system trauma...
+		// Remove the bespoke button that appears for system trauma…
 		flowSteps.set(`${MODULE_ID}:removeSystemTraumaButton`, removeSystemTraumaButton);
 		structureFlow.insertStepAfter("structureInsertSecondaryRollButton", `${MODULE_ID}:removeSystemTraumaButton`);
 
-		// ...and replace it with a regular hull check button instead
+		// …and replace it with a regular hull check button instead
 		flowSteps.set(`${MODULE_ID}:insertHullCheckButton`, insertHullCheckButton);
 		structureFlow.insertStepAfter("structureInsertHullCheckButton", `${MODULE_ID}:insertHullCheckButton`);
 
@@ -44,7 +44,7 @@ Hooks.once("lancer.registerFlows", (flowSteps, flows) => {
 		flowSteps.set(`${MODULE_ID}:npcZeroStructureCheck`, npcZeroStructureCheck);
 		structureFlow.insertStepBefore("noStructureRemaining", `${MODULE_ID}:npcZeroStructureCheck`);
 
-		// ...and we need to put this here too
+		// …and we need to put this here too
 		flowSteps.set(`${MODULE_ID}:hackyLegendaryFixStructure`, hackyLegendaryFix);
 		structureFlow.insertStepBefore("preStructureRollChecks", `${MODULE_ID}:hackyLegendaryFixStructure`);
 	}
@@ -79,17 +79,20 @@ let pack;
 let docs;
 let legendary;
 Hooks.once("ready", async function () {
+	if (game.settings.get(MODULE_ID, SETTING_ID_LEGENDARY_WORKAROUND) == 0) // off
+		return;
 	try {
 		debugLog("Searching for the vanilla Legendary trait to facilitate workarounds…");
 		pack = game.packs.get("world.npc-items");
 		docs = await pack.getDocuments();
 		legendary = docs.find(x => x.system.lid == "npcf_legendary_ultra");
-		debugLog("-> Feature located successfully.");
-	} catch (error) {
-		console.error(error)
-		if (game.settings.get(MODULE_ID, SETTING_ID_LEGENDARY_WORKAROUND) > 0) {
-			ui.notifications.error("Rebaked structure rules failed to locate the Legendary trait from the core book! This will cause things to break! Did you load the core NPCs?")
+		if (!legendary) {
+			throw new Error(getTranslation("errors.no_crb_legendary_loaded"));
 		}
+		debugLog("…Legendary was located successfully.");
+		console.log(legendary);
+	} catch (error) {
+		ui.notifications.error(error);
 	}
 });
 //#endregion
@@ -176,7 +179,7 @@ async function hackyLegendaryFix(state) {
 	const workaroundSetting = game.settings.get(MODULE_ID, SETTING_ID_LEGENDARY_WORKAROUND);
 	if (!workaroundSetting || !state.actor?.is_npc())
 		return true;
-	debugLog(`Attempting to implement hacky Legendary fix for ${state.actor.name}...`);
+	debugLog(`Attempting to implement hacky Legendary fix for ${state.actor.name}…`);
 	let rebakeLegendary = state.actor?.items.find(x => x.system.lid == "npc-rebake_npcf_legendary_ultra");
 	if (!rebakeLegendary) {
 		debugLog("-> NPC lacks the rebake Legendary feature. Skipping.")
@@ -184,6 +187,17 @@ async function hackyLegendaryFix(state) {
 	}
 	if (state.actor.items.find(x => x.system.lid == "npcf_legendary_ultra")) {
 		debugLog("-> NPC already has the base Legendary feature. Skipping.")
+		return true;
+	}
+	// bit of a workaround (shocker in this codebase, I know); throwing the error on its own will break the flow
+	// this at least allows the structure/stress roll to continue gracefully without the reroll
+	try {
+		if (!legendary) {
+			throw new Error(getTranslation("errors.no_crb_legendary_loaded"));
+		}
+	} catch (error) {
+		console.error(error);
+		ui.notifications.error(error);
 		return true;
 	}
 	debugLog("-> Vanilla Legendary is not present but is required. Adding it now…")
